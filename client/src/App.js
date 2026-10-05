@@ -11,6 +11,7 @@ import Signup from './pages/Signup';
 import CategoryPage from './pages/CategoryPage';
 import PostDetail from './pages/PostDetail';
 import Profile from './pages/Profile';
+import CreatePost from './pages/CreatePost';
 import Settings from './pages/Settings';
 import AboutUs from './pages/AboutUs';
 import FAQs from './pages/FAQs';
@@ -33,6 +34,7 @@ function App() {
               <Route path="/faqs" element={<FAQs />} />
               <Route path="/contactus" element={<ContactUs />} />
               <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+              <Route path="/create-post" element={<ProtectedRoute><CreatePost /></ProtectedRoute>} />
               <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             </Routes>
           </main>

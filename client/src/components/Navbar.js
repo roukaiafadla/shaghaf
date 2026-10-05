@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaSearch, FaBars, FaTimes, FaUserCircle } from 'react-icons/fa';
+import { FaSearch, FaBars, FaTimes, FaUserCircle, FaPlus } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../images/logo.png';
 import api from '../api/client';
@@ -67,6 +67,9 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-3">
             {user ? (
               <>
+                <Link to="/create-post" className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-full bg-gradient-to-r from-brand-500 to-brand-600 text-white hover:shadow-lg hover:scale-105 transition-all duration-200">
+                  <FaPlus className="text-xs" /> New Post
+                </Link>
                 <Link to="/profile" className="flex items-center gap-2 text-sm font-medium text-white/90 hover:text-white">
                   <FaUserCircle className="text-xl" /> {user.username}
                 </Link>
@@ -127,6 +130,7 @@ const Navbar = () => {
           <div className="flex gap-3 pt-2">
             {user ? (
               <>
+                <Link to="/create-post" className="flex-1 text-center px-4 py-2 rounded-full bg-brand-500 text-white" onClick={() => setMenuOpen(false)}>New Post</Link>
                 <Link to="/profile" className="flex-1 text-center px-4 py-2 rounded-full border border-white/40 text-white" onClick={() => setMenuOpen(false)}>Profile</Link>
                 <button onClick={() => { logout(); setMenuOpen(false); }} className="flex-1 px-4 py-2 rounded-full border border-white/40 text-white">Logout</button>
               </>

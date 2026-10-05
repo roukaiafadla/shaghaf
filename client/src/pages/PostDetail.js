@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
-import { FaHeart, FaComment, FaRegHeart } from 'react-icons/fa';
+import { useParams, useNavigate } from 'react-router-dom';
+import { FaHeart, FaComment, FaRegHeart, FaTrash } from 'react-icons/fa';
 import api from '../api/client';
 import { useAuth } from '../context/AuthContext';
 
@@ -11,6 +11,7 @@ const PostDetail = () => {
   const [post, setPost] = useState(null);
   const [comment, setComment] = useState('');
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const load = useCallback(() => {
     api.get(`/posts/${id}`).then(({ data }) => setPost(data));
@@ -32,8 +33,19 @@ const PostDetail = () => {
     load();
   };
 
+  const handleDelete = async () => {
+    if (!window.confirm('Delete this post? This cannot be undone.')) return;
+    try {
+      await api.delete(`/posts/${id}`);
+      navigate('/profile');
+    } catch (err) {
+      alert(err.response?.data?.message || 'Could not delete the post');
+    }
+  };
+
   if (!post) return <div className="text-center py-24 text-gray-400">Loading…</div>;
 
+  const isOwner = user && post.author && (post.author._id === user.id);
   const liked = user && post.likes?.some((l) => l === user.id || l._id === user.id);
 
   return (
@@ -46,9 +58,16 @@ const PostDetail = () => {
       <p className="text-sm text-gray-400 mb-6">by {post.author?.username}</p>
       <p className="text-gray-700 leading-relaxed mb-6">{post.description}</p>
 
-      <button onClick={toggleLike} className="flex items-center gap-2 text-sm font-medium text-brand-600 mb-10">
-        {liked ? <FaHeart /> : <FaRegHeart />} {post.likes?.length || 0} likes
-      </button>
+      <div className="flex items-center gap-6 mb-10">
+        <button onClick={toggleLike} className="flex items-center gap-2 text-sm font-medium text-brand-600">
+          {liked ? <FaHeart /> : <FaRegHeart />} {post.likes?.length || 0} likes
+        </button>
+        {isOwner && (
+          <button onClick={handleDelete} className="flex items-center gap-2 text-sm font-medium text-red-500 hover:text-red-700">
+            <FaTrash /> Delete post
+          </button>
+        )}
+      </div>
 
       <h2 className="font-semibold mb-4 flex items-center gap-2"><FaComment /> Comments ({post.comments?.length || 0})</h2>
       <div className="space-y-4 mb-6">

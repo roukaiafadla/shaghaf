@@ -1,6 +1,8 @@
 const asyncHandler = require('express-async-handler');
 const Post = require('../models/Post');
 const Category = require('../models/Category');
+const fs = require('fs');
+const path = require('path');
 
 // @route GET /api/posts/popular?limit=6
 // Ranks real posts by like count (ties broken by newest first) so the
@@ -143,4 +145,28 @@ const addComment = asyncHandler(async (req, res) => {
   res.status(201).json(post.comments[post.comments.length - 1]);
 });
 
-module.exports = { getPosts, getPopularPosts, getPostById, createPost, toggleLike, addComment };
+// @route DELETE /api/posts/:id (protected, author only)
+const deletePost = asyncHandler(async (req, res) => {
+  const post = await Post.findById(req.params.id);
+  if (!post) {
+    res.status(404);
+    throw new Error('Post not found');
+  }
+
+  // Only the person who wrote the post can delete it
+  if (post.author.toString() !== req.user._id.toString()) {
+    res.status(403);
+    throw new Error('Not allowed to delete this post');
+  }
+
+  // Remove the image file from disk too (best effort - never block the delete)
+  if (post.image && post.image.startsWith('/uploads/')) {
+    const filePath = path.join(__dirname, '..', 'uploads', path.basename(post.image));
+    fs.unlink(filePath, () => {});
+  }
+
+  await post.deleteOne();
+  res.json({ message: 'Post deleted', id: req.params.id });
+});
+
+module.exports = { getPosts, getPopularPosts, getPostById, createPost, toggleLike, addComment, deletePost };
