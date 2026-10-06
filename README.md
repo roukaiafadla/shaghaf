@@ -1,54 +1,235 @@
-# Shaghaf
+<div align="center">
 
-**A community platform for discovering and sharing hobbies and creative activities** — art, crafts, photography, cooking, gardening and music.
+<img src="docs/assets/logo.png" alt="Shaghaf logo" width="132" />
 
-People can sign up, share what they're working on with a photo and a description, like and comment on other people's posts, and leave reviews of the platform.
+# Shaghaf &nbsp;<sub>شغف</sub>
 
-Shaghaf (شغف) means *passion* in Arabic.
+**Where hobbies find their community.**<br/>
+Share what you create, discover what others are making, and keep your passion alive.
 
-> Full-stack **MERN** project: React + Tailwind CSS on the front end, Node.js + Express + MongoDB on the back end.
+<br/>
+
+[![Live Demo](https://img.shields.io/badge/Live_Demo-shaghaf--sigma.vercel.app-FE6F61?style=for-the-badge&logo=vercel&logoColor=white)](https://shaghaf-sigma.vercel.app)
+&nbsp;
+[![API Status](https://img.shields.io/badge/API-Render-008080?style=for-the-badge&logo=render&logoColor=white)](https://shaghaf-dkjh.onrender.com/api/health)
+
+<br/>
+
+![React](https://img.shields.io/badge/React_18-20232A?style=flat-square&logo=react&logoColor=61DAFB)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_3-0F172A?style=flat-square&logo=tailwindcss&logoColor=38BDF8)
+![Node.js](https://img.shields.io/badge/Node.js-1B1F23?style=flat-square&logo=nodedotjs&logoColor=5FA04E)
+![Express](https://img.shields.io/badge/Express_4-1B1F23?style=flat-square&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB_Atlas-0B2B1C?style=flat-square&logo=mongodb&logoColor=47A248)
+![Cloudinary](https://img.shields.io/badge/Cloudinary-1A2B6D?style=flat-square&logo=cloudinary&logoColor=white)
+![JWT](https://img.shields.io/badge/Auth-JWT-000000?style=flat-square&logo=jsonwebtokens&logoColor=white)
+
+<br/>
+
+[**Live demo**](https://shaghaf-sigma.vercel.app) &nbsp;·&nbsp;
+[**Features**](#features) &nbsp;·&nbsp;
+[**Architecture**](#architecture) &nbsp;·&nbsp;
+[**Getting started**](#getting-started) &nbsp;·&nbsp;
+[**API**](#api-reference) &nbsp;·&nbsp;
+[**Deployment**](#deployment)
+
+</div>
+
+<br/>
+
+> [!NOTE]
+> The API runs on a free hosting tier that goes to sleep when idle. The **first request can take up to a minute** to wake it up. After that, everything is fast.
+
+<br/>
+
+<div align="center">
+  <img src="docs/screenshots/home.png" alt="Shaghaf home page" width="92%" />
+</div>
 
 ---
 
 ## Table of contents
 
+- [About](#about)
 - [Features](#features)
+- [Screenshots](#screenshots)
+- [Architecture](#architecture)
 - [Tech stack](#tech-stack)
 - [Project structure](#project-structure)
 - [Getting started](#getting-started)
 - [Environment variables](#environment-variables)
-- [Setting up the database](#setting-up-the-database)
 - [API reference](#api-reference)
-- [Security notes](#security-notes)
+- [Deployment](#deployment)
+- [Security](#security)
 - [Roadmap](#roadmap)
+- [Author](#author)
+
+---
+
+## About
+
+**Shaghaf** (شغف) means *passion* in Arabic. It is a community platform for people who love making things: painting, crafts, photography, cooking, gardening and music.
+
+Members share what they are working on with a photo and a story, react to each other's work with likes and comments, and leave reviews of the platform itself. Every number you see on the site (popular posts, platform statistics) is computed live from the database, not hard-coded.
+
+It is a complete, deployed **MERN** application: a React single-page app talking to a REST API built with Express and MongoDB, with images stored on Cloudinary.
 
 ---
 
 ## Features
 
-**Community**
-- Sign up and log in with secure JWT authentication
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### Community
+- Sign up and log in with **JWT** authentication
 - Share a post with a title, category, description and photo
-- Delete your own posts (only the author is allowed to, enforced on the server)
-- Like and comment on posts
-- Leave a review of the platform with a star rating
+- **Like** and **comment** on posts
+- Leave a **star-rated review** of the platform
+- Delete your own posts (ownership enforced on the server)
 
-**Discovery**
-- Six categories: Arts, Crafts, Photography, Cooking, Gardening & Plants, Music & Performance
-- Home page with a row of recent posts per category
-- A **Popular** section that ranks real posts by number of likes
-- Search across posts from the navbar
-- Live platform statistics (users, posts, likes) on the About page
+</td>
+<td width="50%" valign="top">
 
-**Profile**
-- Personal profile page with avatar upload and bio
-- "My Posts" grid with photo, category, likes and comments count
+### Discovery
+- **Six categories**: Arts, Crafts, Photography, Cooking, Gardening & Plants, Music & Performance
+- Home page with the latest posts of every category
+- **Popular** section ranked by real like counts
+- **Search** across posts from the navbar
+- Live platform statistics on the About page
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### Profile
+- Personal profile page with **avatar upload** and bio
+- "My posts" grid with photo, category, likes and comments
 - Settings page to update your bio
 
-**Design**
-- Fully responsive, mobile-first layout built with Tailwind CSS
+</td>
+<td width="50%" valign="top">
+
+### Design and experience
+- Responsive, mobile-first layout built with **Tailwind CSS**
 - Hamburger navigation on small screens
-- Protected routes: profile, settings and create-post redirect guests to the login page
+- **Protected routes**: profile, settings and create-post redirect guests to login
+- Custom brand palette (coral, teal, gold) and Poppins typography
+
+</td>
+</tr>
+</table>
+
+---
+
+## Screenshots
+
+<table>
+<tr>
+<td align="center" width="50%">
+  <img src="docs/screenshots/post-detail.png" alt="Post detail page with likes and comments" /><br/>
+  <sub><b>Post detail</b>: photo, likes and comments</sub>
+</td>
+<td align="center" width="50%">
+  <img src="docs/screenshots/profile.png" alt="Profile page with avatar and personal posts" /><br/>
+  <sub><b>Profile</b>: avatar, bio and your posts</sub>
+</td>
+</tr>
+<tr>
+<td align="center" width="50%">
+  <img src="docs/screenshots/create-post.png" alt="Create post form" /><br/>
+  <sub><b>Create a post</b>: category, description and photo</sub>
+</td>
+<td align="center" width="50%">
+  <img src="docs/screenshots/mobile.png" alt="Shaghaf on a phone" width="45%" /><br/>
+  <sub><b>Mobile</b>: fully responsive</sub>
+</td>
+</tr>
+</table>
+
+---
+
+## Architecture
+
+The front end and the API are deployed separately and talk over HTTPS. Images never pass through the database: the API uploads them to Cloudinary and stores only the resulting URL.
+
+```mermaid
+flowchart LR
+    U([Browser]) -->|HTTPS| V["Vercel<br/>React single-page app"]
+    V -->|"REST + JWT"| R["Render<br/>Express API"]
+    R -->|Mongoose| M[("MongoDB Atlas")]
+    R -->|"upload_stream"| C["Cloudinary<br/>image storage and CDN"]
+    C -.->|"images served by URL"| U
+```
+
+### What happens when someone shares a post
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant Client as React client
+    participant API as Express API
+    participant Cloud as Cloudinary
+    participant DB as MongoDB Atlas
+
+    User->>Client: Fill in the form and pick a photo
+    Client->>API: POST /api/posts (multipart form + JWT)
+    API->>API: Verify the JWT and validate the image (type, 5 MB max)
+    API->>Cloud: Upload the image from memory
+    Cloud-->>API: Permanent secure_url
+    API->>DB: Save the post with the image URL
+    DB-->>API: Saved post
+    API-->>Client: 201 Created
+    Client-->>User: The post appears with its photo
+```
+
+### Data model
+
+```mermaid
+erDiagram
+    USER ||--o{ POST : writes
+    USER ||--o{ REVIEW : leaves
+    CATEGORY ||--o{ POST : groups
+    POST ||--o{ COMMENT : embeds
+    USER ||--o{ COMMENT : writes
+    USER }o--o{ POST : likes
+
+    USER {
+        ObjectId _id
+        string username UK
+        string email UK
+        string password "bcrypt hash"
+        string bio
+        string avatar "Cloudinary URL"
+    }
+    CATEGORY {
+        ObjectId _id
+        string name UK
+        string slug UK
+        string description
+    }
+    POST {
+        ObjectId _id
+        string title
+        string description
+        string image "Cloudinary URL"
+        ObjectId category FK
+        ObjectId author FK
+        ObjectId[] likes
+    }
+    COMMENT {
+        ObjectId author FK
+        string text
+    }
+    REVIEW {
+        ObjectId reviewer FK
+        number rating "1 to 5"
+        string text
+    }
+```
+
+> Comments are embedded inside their post document, and likes are stored as an array of user ids on the post. That keeps reads fast and the like-toggle a single update.
 
 ---
 
@@ -56,11 +237,13 @@ Shaghaf (شغف) means *passion* in Arabic.
 
 | Layer | Technologies |
 |---|---|
-| Front end | React 18, React Router 6, Tailwind CSS 3, Axios, React Icons |
-| Back end | Node.js, Express 4, Mongoose 8 |
-| Database | MongoDB (local or MongoDB Atlas) |
-| Auth | JSON Web Tokens, bcryptjs password hashing |
-| Uploads | Multer (images only: jpg, png, webp, max 5 MB) |
+| **Front end** | React 18, React Router 6, Tailwind CSS 3, Axios, React Icons |
+| **Back end** | Node.js, Express 4, Mongoose 8 |
+| **Database** | MongoDB (local, or MongoDB Atlas in production) |
+| **Authentication** | JSON Web Tokens, bcryptjs password hashing |
+| **Image storage** | Multer (in-memory) + Cloudinary |
+| **Hardening** | Helmet, express-rate-limit, CORS allow-list |
+| **Hosting** | Vercel (client), Render (API), MongoDB Atlas (database), Cloudinary (images) |
 
 ---
 
@@ -68,22 +251,26 @@ Shaghaf (شغف) means *passion* in Arabic.
 
 ```
 shaghaf/
-├── client/                  React front end
+├── client/                      React front end
 │   ├── public/
+│   ├── vercel.json              SPA rewrite so deep links survive a refresh
 │   └── src/
-│       ├── api/             Axios instance (attaches the JWT automatically)
-│       ├── components/      Navbar, Hero, PostsSection, PopularSection, ...
-│       ├── context/         AuthContext (login state shared across the app)
-│       ├── pages/           Home, Login, Signup, CreatePost, PostDetail, Profile, ...
+│       ├── api/                 Axios instance (attaches the JWT automatically)
+│       ├── components/          Navbar, Hero, PostsSection, PopularSection, ...
+│       ├── context/             AuthContext (login state shared across the app)
+│       ├── pages/               Home, Login, Signup, CreatePost, PostDetail, Profile, ...
+│       ├── utils/               imageUrl helper
 │       └── images/
-└── server/                  Express API
-    ├── config/              Database connection
-    ├── controllers/         Route logic (auth, posts, reviews, users, stats)
-    ├── middleware/          Auth guard, image upload, error handling
-    ├── models/              Mongoose schemas: User, Post, Category, Review
-    ├── routes/              API route definitions
-    ├── uploads/             User-uploaded images (not tracked by git)
-    └── server.js            App entry point
+├── server/                      Express API
+│   ├── config/                  Database connection
+│   ├── controllers/             Route logic (auth, posts, reviews, users, stats)
+│   ├── middleware/              Auth guard, image upload, error handling
+│   ├── models/                  Mongoose schemas: User, Post, Category, Review
+│   ├── routes/                  API route definitions
+│   ├── scripts/                 seedCategories.js
+│   ├── utils/                   Cloudinary upload and delete helpers
+│   └── server.js                App entry point
+└── docs/                        Logo and screenshots used by this README
 ```
 
 ---
@@ -93,7 +280,8 @@ shaghaf/
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/) 18 or newer
-- A MongoDB database: either [MongoDB installed locally](https://www.mongodb.com/docs/manual/installation/) or a free cluster on [MongoDB Atlas](https://www.mongodb.com/atlas)
+- A MongoDB database: [MongoDB installed locally](https://www.mongodb.com/docs/manual/installation/) or a free [MongoDB Atlas](https://www.mongodb.com/atlas) cluster
+- A free [Cloudinary](https://cloudinary.com/) account (for image uploads)
 
 ### 1. Clone the repository
 
@@ -102,34 +290,35 @@ git clone https://github.com/roukaiafadla/shaghaf.git
 cd shaghaf
 ```
 
-### 2. Start the back end
+### 2. Set up and start the API
 
 ```bash
 cd server
 npm install
-cp .env.example .env     # on Windows: copy .env.example .env
+cp .env.example .env        # Windows: copy .env.example .env
 ```
 
-Open `server/.env` and fill in your values (see [Environment variables](#environment-variables)), then:
+Fill in `server/.env` (see [Environment variables](#environment-variables)), then create the six categories and start the server:
 
 ```bash
-npm run dev              # API runs on http://localhost:5000
+npm run seed:categories     # safe to run more than once
+npm run dev                 # API on http://localhost:5000
 ```
 
-### 3. Start the front end
+### 3. Start the client
 
-Open a second terminal:
+In a second terminal:
 
 ```bash
 cd client
 npm install
-cp .env.example .env     # on Windows: copy .env.example .env
-npm start                # app runs on http://localhost:3000
+cp .env.example .env        # Windows: copy .env.example .env
+npm start                   # App on http://localhost:3000
 ```
 
-### 4. Set up the categories
+Open <http://localhost:3000>, create an account and share your first post.
 
-The app needs its six categories to exist in the database before people can post. See [Setting up the database](#setting-up-the-database).
+> **Why a seed script?** Every post belongs to a category and the app has no screen for managing categories, so the six defaults are created once with `npm run seed:categories`. It uses upserts, so running it again never creates duplicates.
 
 ---
 
@@ -139,101 +328,142 @@ The app needs its six categories to exist in the database before people can post
 
 | Variable | Description | Example |
 |---|---|---|
-| `PORT` | Port the API listens on | `5000` |
-| `MONGO_URI` | MongoDB connection string | `mongodb+srv://user:password@cluster.mongodb.net/shaghaf` |
+| `PORT` | Port the API listens on (set automatically by most hosts) | `5000` |
+| `MONGO_URI` | MongoDB connection string, database name included | `mongodb+srv://user:pass@cluster.mongodb.net/shaghaf` |
 | `JWT_SECRET` | Long random string used to sign login tokens | *(generate your own)* |
-| `CLIENT_URL` | Front-end URL allowed by CORS | `http://localhost:3000` |
+| `CLIENT_URL` | Front-end origin allowed by CORS, no trailing slash | `http://localhost:3000` |
+| `CLOUDINARY_CLOUD_NAME` | Cloudinary dashboard value | `my-cloud` |
+| `CLOUDINARY_API_KEY` | Cloudinary dashboard value | `123456789012345` |
+| `CLOUDINARY_API_SECRET` | Cloudinary dashboard value | *(keep private)* |
 
 ### `client/.env`
 
 | Variable | Description | Example |
 |---|---|---|
-| `REACT_APP_API_URL` | Base URL of the API | `http://localhost:5000/api` |
+| `REACT_APP_API_URL` | Base URL of the API, ending in `/api` | `http://localhost:5000/api` |
 
-> Never commit your real `.env` files. They are already listed in `.gitignore`.
-
-To generate a strong `JWT_SECRET`:
+Generate a strong `JWT_SECRET` with:
 
 ```bash
 node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 ```
 
----
-
-## Setting up the database
-
-Posts must belong to a category, and the app has no screen for creating categories, so they need to be added once to a new database.
-
-Add these six documents to a collection named **`categories`** (in MongoDB Atlas: *Browse Collections → your database → Insert Document*, or with MongoDB Compass):
-
-| name | slug | description |
-|---|---|---|
-| Arts | `arts` | Painting, drawing, digital art and sculpture. |
-| Crafts | `crafts` | Handmade crafts and DIY projects. |
-| Photography | `photography` | Capturing moments, one shot at a time. |
-| Cooking | `cooking` | Recipes, techniques and culinary workshops. |
-| Gardening & Plants | `gardening-plants` | Growing, tending and designing green spaces. |
-| Music & Performance | `music-performance` | Instruments, singing and live performance. |
-
-Each document has the fields `name`, `slug` and `description`. The `slug` values must match the table exactly, because the URLs and the post form use them.
+> [!WARNING]
+> Never commit a real `.env` file. They are already listed in `.gitignore`.
 
 ---
 
 ## API reference
 
-Base URL: `/api`. Routes marked 🔒 require the header `Authorization: Bearer <token>`.
+Base URL: `/api`. Routes marked 🔒 need the header `Authorization: Bearer <token>`.
 
-### Auth
+<details open>
+<summary><b>Auth</b></summary>
+
 | Method | Endpoint | Description |
 |---|---|---|
-| POST | `/auth/signup` | Create an account |
-| POST | `/auth/login` | Log in and receive a token |
-| GET | `/auth/me` 🔒 | Get the logged-in user |
+| `POST` | `/auth/signup` | Create an account and receive a token |
+| `POST` | `/auth/login` | Log in and receive a token |
+| `GET` | `/auth/me` 🔒 | Get the logged-in user |
 
-### Posts
+</details>
+
+<details open>
+<summary><b>Posts</b></summary>
+
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/posts` | List posts (`?category=slug` and `?search=term` supported) |
-| GET | `/posts/popular` | Posts ranked by number of likes |
-| GET | `/posts/:id` | A single post with author and comments |
-| POST | `/posts` 🔒 | Create a post (`multipart/form-data`: title, category, description, image) |
-| DELETE | `/posts/:id` 🔒 | Delete a post (author only) |
-| PUT | `/posts/:id/like` 🔒 | Like or unlike a post |
-| POST | `/posts/:id/comments` 🔒 | Add a comment |
+| `GET` | `/posts` | List posts (`?category=slug` and `?search=term` supported) |
+| `GET` | `/posts/popular` | Posts ranked by number of likes (`?limit=6`) |
+| `GET` | `/posts/:id` | One post with its author and comments |
+| `POST` | `/posts` 🔒 | Create a post (`multipart/form-data`: `title`, `category`, `description`, `image`) |
+| `DELETE` | `/posts/:id` 🔒 | Delete a post (author only) |
+| `PUT` | `/posts/:id/like` 🔒 | Like or unlike a post |
+| `POST` | `/posts/:id/comments` 🔒 | Add a comment |
 
-### Categories, reviews, users, stats
+</details>
+
+<details open>
+<summary><b>Categories, reviews, users and stats</b></summary>
+
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/categories` | List all categories |
-| GET | `/categories/:slug` | A single category |
-| GET | `/reviews` | Latest reviews |
-| POST | `/reviews` 🔒 | Create a review |
-| PUT | `/users/me` 🔒 | Update bio and avatar |
-| GET | `/users/me/posts` 🔒 | Posts written by the logged-in user |
-| GET | `/stats` | Platform totals (users, posts, categories, likes) |
-| GET | `/health` | Health check |
+| `GET` | `/categories` | List all categories |
+| `GET` | `/categories/:slug` | One category |
+| `GET` | `/reviews` | Latest reviews |
+| `POST` | `/reviews` 🔒 | Create a review (rating 1 to 5 and text) |
+| `PUT` | `/users/me` 🔒 | Update bio and avatar (`multipart/form-data`) |
+| `GET` | `/users/me/posts` 🔒 | Posts written by the logged-in user |
+| `GET` | `/stats` | Platform totals: users, posts, categories, likes |
+| `GET` | `/health` | Health check |
+
+</details>
+
+**Limits and validation:** images must be JPG, PNG or WebP and at most 5 MB. Titles are limited to 120 characters, descriptions to 2000, comments and reviews to 500 and bios to 300. Passwords need at least 6 characters. Login and signup are rate limited per IP address.
 
 ---
 
-## Security notes
+## Deployment
 
-- Passwords are hashed with bcrypt and never returned by the API
-- Protected routes verify a signed JWT on every request
-- Only a post's author can delete it, and this is checked on the server, not just hidden in the UI
-- Uploads accept images only (jpg, png, webp) and are limited to 5 MB
-- CORS only allows the origin set in `CLIENT_URL`
+The project runs in production on four free services. Every `git push` to `main` redeploys the client and the API automatically.
+
+| Part | Service | Key settings |
+|---|---|---|
+| **Database** | [MongoDB Atlas](https://www.mongodb.com/atlas) | Allow network access from `0.0.0.0/0`, create a database user, and put the database name (`/shaghaf`) in the connection string |
+| **API** | [Render](https://render.com) Web Service | Root directory `server`, build `npm install`, start `npm start`, plus all variables from `server/.env` |
+| **Client** | [Vercel](https://vercel.com) | Root directory `client`, variable `REACT_APP_API_URL` set to `https://<your-api>.onrender.com/api` |
+| **Images** | [Cloudinary](https://cloudinary.com) | Add the three `CLOUDINARY_*` variables to the API service |
+
+**Order of operations**
+
+1. Create the Atlas cluster, then run `npm run seed:categories` once against it.
+2. Deploy the API on Render and check `/api/health` returns `{"status":"ok"}`.
+3. Deploy the client on Vercel with `REACT_APP_API_URL` pointing at the API.
+4. Set `CLIENT_URL` on Render to the exact Vercel URL (no trailing slash) so CORS allows it.
+
+> Images are stored on Cloudinary rather than on the API's disk, because free hosting platforms wipe local files on every restart or redeploy.
+
+---
+
+## Security
+
+- Passwords are hashed with **bcrypt** and never returned by the API
+- Protected routes verify a signed **JWT** on every request
+- Only a post's author can delete it, **enforced on the server** and not only hidden in the UI
+- Uploads accept **images only** (JPG, PNG, WebP) and are capped at 5 MB, and files are kept in memory instead of being written to disk
+- **Helmet** sets secure HTTP headers
+- **Rate limiting** on the auth routes slows down brute-force attempts
+- **CORS** only allows the origin set in `CLIENT_URL`
+- Search input is regex-escaped before it reaches MongoDB
+- Secrets live in environment variables and are never committed
 
 ---
 
 ## Roadmap
 
+**Shipped**
+- [x] Cloud image storage with Cloudinary
+- [x] Script that creates the default categories
+- [x] Production deployment (Vercel, Render, MongoDB Atlas)
+- [x] Security headers and rate limiting
+
+**Next**
 - [ ] Edit existing posts (text and photo)
-- [ ] Store images in cloud storage (Cloudinary or S3) so they survive redeploys on hosts with temporary disks
-- [ ] Script to create the default categories automatically
-- [ ] Deployment (front end + API + MongoDB Atlas)
+- [ ] Pagination for post lists
+- [ ] Request validation with a schema library
+- [ ] Automated tests and a CI workflow
+- [ ] Store the session in an httpOnly cookie instead of local storage
 
 ---
 
 ## Author
 
-Built by [@roukaiafadla](https://github.com/roukaiafadla).
+Built by [**@roukaiafadla**](https://github.com/roukaiafadla).
+
+<div align="center">
+
+<br/>
+
+If you like this project, a ⭐ on the repository means a lot.
+
+</div>
