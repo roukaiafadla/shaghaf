@@ -3,8 +3,8 @@ import { FaUserCircle, FaCamera, FaEye, FaTrash, FaPlus, FaHeart, FaComment } fr
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/client';
+import { imgUrl } from '../utils/imageUrl';
 
-const API_ORIGIN = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
 
 const Profile = () => {
   const { user, updateUser } = useAuth();
@@ -44,7 +44,7 @@ const Profile = () => {
       <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
         <div className="relative">
           {user?.avatar ? (
-            <img src={`${API_ORIGIN}${user.avatar}`} alt="avatar" className="w-24 h-24 rounded-full object-cover" />
+            <img src={imgUrl(user.avatar)} alt="avatar" className="w-24 h-24 rounded-full object-cover" />
           ) : (
             <FaUserCircle className="w-24 h-24 text-gray-300" />
           )}
@@ -84,7 +84,7 @@ const Profile = () => {
               <div key={p._id} className="relative group bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
                 <Link to={`/posts/${p._id}`} className="block">
                   {p.image ? (
-                    <img src={`${API_ORIGIN}${p.image}`} alt={p.title} className="h-44 w-full object-cover" />
+                    <img src={imgUrl(p.image)} alt={p.title} className="h-44 w-full object-cover" />
                   ) : (
                     <div className="h-44 w-full bg-brand-50 flex items-center justify-center text-brand-300 text-sm">No image</div>
                   )}

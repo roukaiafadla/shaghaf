@@ -3,8 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { FaHeart, FaComment, FaRegHeart, FaTrash } from 'react-icons/fa';
 import api from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import { imgUrl } from '../utils/imageUrl';
 
-const API_ORIGIN = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -51,7 +51,7 @@ const PostDetail = () => {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       {post.image && (
-        <img src={`${API_ORIGIN}${post.image}`} alt={post.title} className="w-full rounded-2xl mb-6 max-h-[420px] object-cover" />
+        <img src={imgUrl(post.image)} alt={post.title} className="w-full rounded-2xl mb-6 max-h-[420px] object-cover" />
       )}
       <p className="text-xs uppercase tracking-wide text-brand-500 font-semibold mb-2">{post.category?.name}</p>
       <h1 className="text-2xl sm:text-3xl font-bold mb-2">{post.title}</h1>

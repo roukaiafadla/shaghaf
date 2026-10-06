@@ -1,14 +1,10 @@
 const multer = require('multer');
 const path = require('path');
 
-// Stores uploaded images (post photos, avatars) in /uploads with a unique filename
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, path.join(__dirname, '..', 'uploads')),
-  filename: (req, file, cb) => {
-    const unique = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-    cb(null, `${unique}${path.extname(file.originalname)}`);
-  },
-});
+// Keeps uploaded images (post photos, avatars) in memory as req.file.buffer.
+// The controller then sends the buffer to Cloudinary, so nothing is written
+// to the server's disk (which is wiped on every redeploy on Render).
+const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
   const allowed = /jpeg|jpg|png|webp/;
@@ -20,7 +16,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB cap - keeps the DB/disk from bloating like the old repo did
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB cap per image
 });
 
 module.exports = upload;

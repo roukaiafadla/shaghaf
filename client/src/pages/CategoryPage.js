@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaHeart, FaComment } from 'react-icons/fa';
 import api from '../api/client';
+import { imgUrl } from '../utils/imageUrl';
 
 // Replaces category1.js...category6.js, which were 6 near-identical files
 // with hardcoded placeholder text. One dynamic route + real data instead.
@@ -39,7 +40,7 @@ const CategoryPage = () => {
           {posts.map((post) => (
             <Link key={post._id} to={`/posts/${post._id}`} className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
               {post.image ? (
-                <img src={`${process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000'}${post.image}`} alt={post.title} className="h-44 w-full object-cover" />
+                <img src={imgUrl(post.image)} alt={post.title} className="h-44 w-full object-cover" />
               ) : (
                 <div className="h-44 w-full bg-brand-50 flex items-center justify-center text-brand-300 text-sm">No image</div>
               )}

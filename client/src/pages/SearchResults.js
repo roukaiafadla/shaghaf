@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { FaHeart, FaComment, FaSearch, FaTimes } from 'react-icons/fa';
 import api from '../api/client';
+import { imgUrl } from '../utils/imageUrl';
 
-const imgBase = process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000';
 
 const ResultCard = ({ post }) => (
   <Link
@@ -13,7 +13,7 @@ const ResultCard = ({ post }) => (
     <div className="h-40 w-full overflow-hidden">
       {post.image ? (
         <img
-          src={`${imgBase}${post.image}`}
+          src={imgUrl(post.image)}
           alt={post.title}
           className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"
         />

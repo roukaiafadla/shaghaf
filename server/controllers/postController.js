@@ -1,8 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const Post = require('../models/Post');
 const Category = require('../models/Category');
-const fs = require('fs');
-const path = require('path');
+const { uploadBuffer, deleteByUrl } = require('../utils/cloudinary');
 
 // @route GET /api/posts/popular?limit=6
 // Ranks real posts by like count (ties broken by newest first) so the
@@ -96,12 +95,19 @@ const createPost = asyncHandler(async (req, res) => {
     throw new Error('Invalid category');
   }
 
+  // Upload the photo to Cloudinary and store its permanent https URL
+  let imageUrl = '';
+  if (req.file) {
+    const result = await uploadBuffer(req.file.buffer);
+    imageUrl = result.secure_url;
+  }
+
   const post = await Post.create({
     title,
     description,
     category: categoryDoc._id,
     author: req.user._id,
-    image: req.file ? `/uploads/${req.file.filename}` : '',
+    image: imageUrl,
   });
 
   res.status(201).json(post);
@@ -159,11 +165,8 @@ const deletePost = asyncHandler(async (req, res) => {
     throw new Error('Not allowed to delete this post');
   }
 
-  // Remove the image file from disk too (best effort - never block the delete)
-  if (post.image && post.image.startsWith('/uploads/')) {
-    const filePath = path.join(__dirname, '..', 'uploads', path.basename(post.image));
-    fs.unlink(filePath, () => {});
-  }
+  // Remove the image from Cloudinary too (best effort - never blocks the delete)
+  await deleteByUrl(post.image);
 
   await post.deleteOne();
   res.json({ message: 'Post deleted', id: req.params.id });

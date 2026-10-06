@@ -1,7 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const connectDB = require('./config/db');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
@@ -9,9 +10,24 @@ connectDB();
 
 const app = express();
 
+// Render sits behind a proxy; this lets rate limiting see the real client IP
+app.set('trust proxy', 1);
+
+app.use(helmet());
 app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:3000' }));
 app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Slow down brute-force attempts on login/signup
+app.use(
+  '/api/auth',
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 50,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { message: 'Too many attempts, please try again in a few minutes.' },
+  })
+);
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
