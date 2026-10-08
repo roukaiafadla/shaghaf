@@ -1,5 +1,5 @@
 const express = require('express');
-const { getPosts, getPopularPosts, getPostById, createPost, toggleLike, addComment, deletePost } = require('../controllers/postController');
+const { getPosts, getPopularPosts, getPostById, createPost, toggleLike, addComment, deleteComment, deletePost } = require('../controllers/postController');
 const { protect } = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
 
@@ -14,5 +14,6 @@ router.post('/', protect, upload.single('image'), createPost);
 router.delete('/:id', protect, deletePost);
 router.put('/:id/like', protect, toggleLike);
 router.post('/:id/comments', protect, addComment);
+router.delete('/:id/comments/:commentId', protect, deleteComment);
 
 module.exports = router;

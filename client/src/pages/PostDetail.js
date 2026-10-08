@@ -43,6 +43,16 @@ const PostDetail = () => {
     }
   };
 
+  const handleDeleteComment = async (commentId) => {
+    if (!window.confirm('Delete this comment?')) return;
+    try {
+      await api.delete(`/posts/${id}/comments/${commentId}`);
+      load();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Could not delete the comment');
+    }
+  };
+
   if (!post) return <div className="text-center py-24 text-gray-400">Loading…</div>;
 
   const isOwner = user && post.author && (post.author._id === user.id);
@@ -71,12 +81,28 @@ const PostDetail = () => {
 
       <h2 className="font-semibold mb-4 flex items-center gap-2"><FaComment /> Comments ({post.comments?.length || 0})</h2>
       <div className="space-y-4 mb-6">
-        {post.comments?.map((c) => (
-          <div key={c._id} className="bg-gray-50 rounded-lg p-3">
-            <p className="text-sm font-medium">{c.author?.username || 'User'}</p>
-            <p className="text-sm text-gray-600">{c.text}</p>
-          </div>
-        ))}
+        {post.comments?.map((c) => {
+          // The comment's author and the post's owner can remove a comment
+          const canDelete = user && (isOwner || c.author?._id === user.id);
+          return (
+            <div key={c._id} className="bg-gray-50 rounded-lg p-3 flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-sm font-medium">{c.author?.username || 'User'}</p>
+                <p className="text-sm text-gray-600 break-words">{c.text}</p>
+              </div>
+              {canDelete && (
+                <button
+                  onClick={() => handleDeleteComment(c._id)}
+                  aria-label="Delete comment"
+                  title="Delete comment"
+                  className="shrink-0 text-gray-400 hover:text-red-500 transition-colors"
+                >
+                  <FaTrash className="text-xs" />
+                </button>
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {user ? (

@@ -1,4 +1,5 @@
 const asyncHandler = require('express-async-handler');
+const mongoose = require('mongoose');
 const Post = require('../models/Post');
 const Category = require('../models/Category');
 const { uploadBuffer, deleteByUrl } = require('../utils/cloudinary');
@@ -151,6 +152,41 @@ const addComment = asyncHandler(async (req, res) => {
   res.status(201).json(post.comments[post.comments.length - 1]);
 });
 
+// @route DELETE /api/posts/:id/comments/:commentId (protected)
+// Allowed for the comment's author or the owner of the post.
+const deleteComment = asyncHandler(async (req, res) => {
+  const { id, commentId } = req.params;
+
+  if (!mongoose.isValidObjectId(id) || !mongoose.isValidObjectId(commentId)) {
+    res.status(404);
+    throw new Error('Comment not found');
+  }
+
+  const post = await Post.findById(id);
+  if (!post) {
+    res.status(404);
+    throw new Error('Post not found');
+  }
+
+  const comment = post.comments.id(commentId);
+  if (!comment) {
+    res.status(404);
+    throw new Error('Comment not found');
+  }
+
+  const userId = req.user._id.toString();
+  const isCommentAuthor = comment.author.toString() === userId;
+  const isPostOwner = post.author.toString() === userId;
+  if (!isCommentAuthor && !isPostOwner) {
+    res.status(403);
+    throw new Error('Not allowed to delete this comment');
+  }
+
+  post.comments.pull({ _id: commentId });
+  await post.save();
+  res.json({ message: 'Comment deleted', id: commentId });
+});
+
 // @route DELETE /api/posts/:id (protected, author only)
 const deletePost = asyncHandler(async (req, res) => {
   const post = await Post.findById(req.params.id);
@@ -172,4 +208,4 @@ const deletePost = asyncHandler(async (req, res) => {
   res.json({ message: 'Post deleted', id: req.params.id });
 });
 
-module.exports = { getPosts, getPopularPosts, getPostById, createPost, toggleLike, addComment, deletePost };
+module.exports = { getPosts, getPopularPosts, getPostById, createPost, toggleLike, addComment, deleteComment, deletePost };
