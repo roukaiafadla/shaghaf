@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaUserCircle, FaCamera, FaEye, FaTrash, FaPlus, FaHeart, FaComment } from 'react-icons/fa';
+import { FaUserCircle, FaCamera, FaEye, FaTrash, FaPlus, FaHeart, FaComment, FaPen } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/client';
@@ -97,6 +97,14 @@ const Profile = () => {
                       <span className="flex items-center gap-1"><FaComment /> {p.comments?.length || 0}</span>
                     </div>
                   </div>
+                </Link>
+                <Link
+                  to={`/posts/${p._id}/edit`}
+                  aria-label={`Edit ${p.title}`}
+                  title="Edit post"
+                  className="absolute top-3 right-14 bg-white/90 text-gray-500 hover:text-brand-600 rounded-full p-2 shadow"
+                >
+                  <FaPen />
                 </Link>
                 <button
                   onClick={() => handleDelete(p._id)}

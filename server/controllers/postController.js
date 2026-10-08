@@ -114,6 +114,67 @@ const createPost = asyncHandler(async (req, res) => {
   res.status(201).json(post);
 });
 
+// @route PUT /api/posts/:id (protected, author only)
+// Updates title, description, category and optionally replaces the photo.
+const updatePost = asyncHandler(async (req, res) => {
+  if (!mongoose.isValidObjectId(req.params.id)) {
+    res.status(404);
+    throw new Error('Post not found');
+  }
+
+  const post = await Post.findById(req.params.id);
+  if (!post) {
+    res.status(404);
+    throw new Error('Post not found');
+  }
+
+  if (post.author.toString() !== req.user._id.toString()) {
+    res.status(403);
+    throw new Error('You can only edit your own posts');
+  }
+
+  const title = typeof req.body.title === 'string' ? req.body.title.trim() : post.title;
+  const description = typeof req.body.description === 'string' ? req.body.description.trim() : post.description;
+
+  if (!title || !description) {
+    res.status(400);
+    throw new Error('Title and description cannot be empty');
+  }
+  if (title.length > 120 || description.length > 2000) {
+    res.status(400);
+    throw new Error('Title is limited to 120 characters and description to 2000');
+  }
+
+  if (req.body.category) {
+    const categoryDoc =
+      (await Category.findOne({ slug: req.body.category })) ||
+      (mongoose.isValidObjectId(req.body.category) ? await Category.findById(req.body.category) : null);
+    if (!categoryDoc) {
+      res.status(400);
+      throw new Error('Invalid category');
+    }
+    post.category = categoryDoc._id;
+  }
+
+  post.title = title;
+  post.description = description;
+
+  // New photo: upload it first, and only delete the old one once the save succeeded
+  let oldImage = '';
+  if (req.file) {
+    const result = await uploadBuffer(req.file.buffer);
+    oldImage = post.image;
+    post.image = result.secure_url;
+  }
+
+  await post.save();
+  if (oldImage) await deleteByUrl(oldImage);
+
+  await post.populate('author', 'username avatar');
+  await post.populate('category', 'name slug');
+  res.json(post);
+});
+
 // @route PUT /api/posts/:id/like (protected)
 const toggleLike = asyncHandler(async (req, res) => {
   const post = await Post.findById(req.params.id);
@@ -208,4 +269,4 @@ const deletePost = asyncHandler(async (req, res) => {
   res.json({ message: 'Post deleted', id: req.params.id });
 });
 
-module.exports = { getPosts, getPopularPosts, getPostById, createPost, toggleLike, addComment, deleteComment, deletePost };
+module.exports = { getPosts, getPopularPosts, getPostById, createPost, updatePost, toggleLike, addComment, deleteComment, deletePost };

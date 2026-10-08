@@ -35,6 +35,7 @@ function App() {
               <Route path="/contactus" element={<ContactUs />} />
               <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
               <Route path="/create-post" element={<ProtectedRoute><CreatePost /></ProtectedRoute>} />
+              <Route path="/posts/:id/edit" element={<ProtectedRoute><CreatePost /></ProtectedRoute>} />
               <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             </Routes>
           </main>

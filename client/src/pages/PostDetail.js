@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { FaHeart, FaComment, FaRegHeart, FaTrash } from 'react-icons/fa';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { FaHeart, FaComment, FaRegHeart, FaTrash, FaPen } from 'react-icons/fa';
 import api from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { imgUrl } from '../utils/imageUrl';
@@ -72,6 +72,11 @@ const PostDetail = () => {
         <button onClick={toggleLike} className="flex items-center gap-2 text-sm font-medium text-brand-600">
           {liked ? <FaHeart /> : <FaRegHeart />} {post.likes?.length || 0} likes
         </button>
+        {isOwner && (
+          <Link to={`/posts/${id}/edit`} className="flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-brand-600">
+            <FaPen /> Edit post
+          </Link>
+        )}
         {isOwner && (
           <button onClick={handleDelete} className="flex items-center gap-2 text-sm font-medium text-red-500 hover:text-red-700">
             <FaTrash /> Delete post
