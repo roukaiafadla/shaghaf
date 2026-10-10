@@ -4,6 +4,7 @@ import { FaHeart, FaComment, FaRegHeart, FaTrash, FaPen } from 'react-icons/fa';
 import api from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { imgUrl } from '../utils/imageUrl';
+import AuthorLink from '../components/AuthorLink';
 
 
 const PostDetail = () => {
@@ -65,7 +66,7 @@ const PostDetail = () => {
       )}
       <p className="text-xs uppercase tracking-wide text-brand-500 font-semibold mb-2">{post.category?.name}</p>
       <h1 className="text-2xl sm:text-3xl font-bold mb-2">{post.title}</h1>
-      <p className="text-sm text-gray-400 mb-6">by {post.author?.username}</p>
+      <p className="text-sm text-gray-400 mb-6">by <AuthorLink username={post.author?.username} /></p>
       <p className="text-gray-700 leading-relaxed mb-6">{post.description}</p>
 
       <div className="flex items-center gap-6 mb-10">
@@ -92,7 +93,9 @@ const PostDetail = () => {
           return (
             <div key={c._id} className="bg-gray-50 rounded-lg p-3 flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="text-sm font-medium">{c.author?.username || 'User'}</p>
+                <p className="text-sm font-medium">
+                  <AuthorLink username={c.author?.username}>{c.author?.username || 'User'}</AuthorLink>
+                </p>
                 <p className="text-sm text-gray-600 break-words">{c.text}</p>
               </div>
               {canDelete && (

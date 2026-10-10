@@ -31,4 +31,54 @@ const getMyPosts = asyncHandler(async (req, res) => {
   res.json(posts);
 });
 
-module.exports = { updateProfile, getMyPosts };
+// @route GET /api/users/:username (public)
+// Public profile: only safe fields (never email or password), plus the user's posts and totals.
+const getPublicProfile = asyncHandler(async (req, res) => {
+  const username = String(req.params.username || '').trim();
+  const escaped = username.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  // "me" belongs to the logged-in user routes, so it can never be a public profile
+  const user =
+    username && username.toLowerCase() !== 'me'
+      ? await User.findOne({ username: new RegExp(`^${escaped}$`, 'i') }).select('username bio avatar createdAt')
+      : null;
+
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  const posts = await Post.find({ author: user._id })
+    .select('title description image category likes comments createdAt')
+    .populate('category', 'name slug')
+    .sort('-createdAt')
+    .lean();
+
+  // Send counts, not the arrays of who liked or what was said
+  const publicPosts = posts.map((p) => ({
+    _id: p._id,
+    title: p.title,
+    description: p.description,
+    image: p.image,
+    category: p.category,
+    createdAt: p.createdAt,
+    likeCount: p.likes?.length || 0,
+    commentCount: p.comments?.length || 0,
+  }));
+
+  res.json({
+    user: {
+      username: user.username,
+      bio: user.bio,
+      avatar: user.avatar,
+      createdAt: user.createdAt,
+    },
+    stats: {
+      posts: publicPosts.length,
+      likes: publicPosts.reduce((sum, p) => sum + p.likeCount, 0),
+    },
+    posts: publicPosts,
+  });
+});
+
+module.exports = { updateProfile, getMyPosts, getPublicProfile };

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FaHeart, FaComment, FaFire } from 'react-icons/fa';
 import api from '../api/client';
 import { imgUrl } from '../utils/imageUrl';
+import AuthorLink from './AuthorLink';
 
 
 const PopularCard = ({ post, rank }) => (
@@ -33,7 +34,7 @@ const PopularCard = ({ post, rank }) => (
     </div>
     <div className="p-5">
       <h3 className="font-semibold mb-1 group-hover:text-brand-600 transition-colors">{post.title}</h3>
-      <p className="text-xs text-gray-400 mb-2">by {post.author?.username}</p>
+      <p className="text-xs text-gray-400 mb-2">by <AuthorLink username={post.author?.username} nested /></p>
       <p className="text-sm text-gray-600 mb-3 line-clamp-2">{post.description}</p>
       <div className="flex items-center gap-4 text-xs text-gray-400">
         <span className="flex items-center gap-1 text-brand-500 font-medium">

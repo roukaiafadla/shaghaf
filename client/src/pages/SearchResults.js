@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { FaHeart, FaComment, FaSearch, FaTimes } from 'react-icons/fa';
 import api from '../api/client';
 import { imgUrl } from '../utils/imageUrl';
+import AuthorLink from '../components/AuthorLink';
 
 
 const ResultCard = ({ post }) => (
@@ -28,7 +29,7 @@ const ResultCard = ({ post }) => (
       <h3 className="font-semibold text-sm mt-1 group-hover:text-brand-600 transition-colors">{post.title}</h3>
       <p className="text-xs text-gray-500 mt-1 line-clamp-2">{post.description}</p>
       <div className="flex items-center justify-between mt-3 text-xs text-gray-400">
-        <span>by {post.author?.username || 'Unknown'}</span>
+        <span>by <AuthorLink username={post.author?.username} nested /></span>
         <span className="flex items-center gap-3">
           <span className="flex items-center gap-1"><FaHeart /> {post.likes?.length || 0}</span>
           <span className="flex items-center gap-1"><FaComment /> {post.comments?.length || 0}</span>
