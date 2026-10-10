@@ -42,11 +42,11 @@ const Profile = () => {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
-        <div className="relative">
+        <div className="relative shrink-0">
           {user?.avatar ? (
-            <img src={imgUrl(user.avatar)} alt="avatar" className="w-24 h-24 rounded-full object-cover" />
+            <img src={imgUrl(user.avatar)} alt="avatar" className="w-24 h-24 shrink-0 rounded-full object-cover" />
           ) : (
-            <FaUserCircle className="w-24 h-24 text-gray-300" />
+            <FaUserCircle className="w-24 h-24 shrink-0 text-gray-300" />
           )}
           <label className="absolute bottom-0 right-0 bg-brand-500 text-white rounded-full p-2 cursor-pointer text-xs">
             <FaCamera />

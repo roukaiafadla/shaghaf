@@ -1,5 +1,5 @@
 const express = require('express');
-const { getPosts, getPopularPosts, getPostById, createPost, updatePost, toggleLike, addComment, deleteComment, deletePost } = require('../controllers/postController');
+const { getPosts, getPopularPosts, getPostById, getMoreFromAuthor, createPost, updatePost, toggleLike, addComment, deleteComment, deletePost } = require('../controllers/postController');
 const { protect } = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
 
@@ -9,6 +9,7 @@ router.get('/', getPosts);
 // NOTE: this must stay above the /:id route below, otherwise Express would
 // treat "popular" as an :id value and 404/cast-error instead of matching here.
 router.get('/popular', getPopularPosts);
+router.get('/:id/more', getMoreFromAuthor);
 router.get('/:id', getPostById);
 router.post('/', protect, upload.single('image'), createPost);
 router.put('/:id', protect, upload.single('image'), updatePost);

@@ -114,6 +114,37 @@ const createPost = asyncHandler(async (req, res) => {
   res.status(201).json(post);
 });
 
+// @route GET /api/posts/:id/more?limit=3
+// Other posts by the same author as this post (newest first), as light cards.
+const getMoreFromAuthor = asyncHandler(async (req, res) => {
+  if (!mongoose.isValidObjectId(req.params.id)) return res.json([]);
+
+  const post = await Post.findById(req.params.id).select('author');
+  if (!post) {
+    res.status(404);
+    throw new Error('Post not found');
+  }
+
+  const limit = Math.min(parseInt(req.query.limit, 10) || 3, 6);
+  const others = await Post.find({ author: post.author, _id: { $ne: post._id } })
+    .select('title image category likes comments createdAt')
+    .populate('category', 'name slug')
+    .sort('-createdAt')
+    .limit(limit)
+    .lean();
+
+  res.json(
+    others.map((p) => ({
+      _id: p._id,
+      title: p.title,
+      image: p.image,
+      category: p.category,
+      likeCount: p.likes?.length || 0,
+      commentCount: p.comments?.length || 0,
+    }))
+  );
+});
+
 // @route PUT /api/posts/:id (protected, author only)
 // Updates title, description, category and optionally replaces the photo.
 const updatePost = asyncHandler(async (req, res) => {
@@ -269,4 +300,4 @@ const deletePost = asyncHandler(async (req, res) => {
   res.json({ message: 'Post deleted', id: req.params.id });
 });
 
-module.exports = { getPosts, getPopularPosts, getPostById, createPost, updatePost, toggleLike, addComment, deleteComment, deletePost };
+module.exports = { getPosts, getPopularPosts, getPostById, getMoreFromAuthor, createPost, updatePost, toggleLike, addComment, deleteComment, deletePost };

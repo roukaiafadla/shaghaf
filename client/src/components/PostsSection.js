@@ -25,7 +25,7 @@ const PostCard = ({ post }) => (
       <h3 className="font-semibold text-sm truncate group-hover:text-brand-600 transition-colors">{post.title}</h3>
       <p className="text-xs text-gray-500 mt-1 line-clamp-2">{post.description}</p>
       <div className="flex items-center justify-between mt-3 text-xs text-gray-400">
-        <span>by <AuthorLink username={post.author?.username} nested /></span>
+        <span>by <AuthorLink username={post.author?.username} avatar={post.author?.avatar} showAvatar nested /></span>
         <span className="flex items-center gap-3">
           <span className="flex items-center gap-1 group-hover:text-brand-500 transition-colors"><FaHeart /> {post.likes?.length || 0}</span>
           <span className="flex items-center gap-1"><FaComment /> {post.comments?.length || 0}</span>
