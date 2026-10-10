@@ -99,6 +99,7 @@ It is a complete, deployed **MERN** application: a React single-page app talking
 - Home page with the latest posts of every category
 - **Popular** section ranked by real like counts
 - **Search** across posts from the navbar
+- **More from this author** at the bottom of every post page
 - Live platform statistics on the About page
 
 </td>
@@ -110,7 +111,7 @@ It is a complete, deployed **MERN** application: a React single-page app talking
 - Personal profile page with **avatar upload** and bio
 - "My posts" grid with photo, category, likes and comments
 - Settings page to update your bio
-- **Public member pages** at `/u/<username>`: bio, join date, totals and posts. Every author name on the site links to one
+- **Public member pages** at `/u/<username>`: bio, join date, totals and posts. Every author name on the site links to one, with the member's avatar beside it
 
 </td>
 <td width="50%" valign="top">
@@ -260,7 +261,7 @@ shaghaf/
 │   ├── vercel.json              SPA rewrite so deep links survive a refresh
 │   └── src/
 │       ├── api/                 Axios instance (attaches the JWT automatically)
-│       ├── components/          Navbar, Hero, PostsSection, PopularSection, AuthorLink, ...
+│       ├── components/          Navbar, Hero, PostsSection, PopularSection, AuthorLink, Avatar, MoreFromAuthor, ...
 │       ├── context/             AuthContext (login state shared across the app)
 │       ├── pages/               Home, Login, Signup, CreatePost, PostDetail, Profile, UserProfile, ...
 │       ├── utils/               imageUrl helper
@@ -380,6 +381,7 @@ Base URL: `/api`. Routes marked 🔒 need the header `Authorization: Bearer <tok
 | `GET` | `/posts` | List posts (`?category=slug` and `?search=term` supported) |
 | `GET` | `/posts/popular` | Posts ranked by number of likes (`?limit=6`) |
 | `GET` | `/posts/:id` | One post with its author and comments |
+| `GET` | `/posts/:id/more` | Other posts by the same author (`?limit=3`) |
 | `POST` | `/posts` 🔒 | Create a post (`multipart/form-data`: `title`, `category`, `description`, `image`) |
 | `PUT` | `/posts/:id` 🔒 | Edit a post (author only, `multipart/form-data`, photo optional) |
 | `DELETE` | `/posts/:id` 🔒 | Delete a post (author only) |
@@ -457,11 +459,10 @@ The project runs in production on four free services. Every `git push` to `main`
 - [x] Edit posts (text and photo)
 - [x] Delete comments
 - [x] Public member profiles
+- [x] Avatars next to names and "More from this author"
 
 **Next**
-- [ ] Easier-to-spot profile links (avatars next to names in comments and cards)
 - [ ] Members page and people search
-- [ ] "More from this author" on post pages
 - [ ] Follow system, following feed and notifications
 - [ ] Photo cropping and resizing before upload
 - [ ] Email verification and password reset
