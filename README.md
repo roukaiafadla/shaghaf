@@ -36,8 +36,9 @@ Share what you create, discover what others are making, and keep your passion al
 
 <br/>
 
-> [!NOTE]
-> The API runs on a free hosting tier that goes to sleep when idle. The **first request can take up to a minute** to wake it up. After that, everything is fast.
+<div align="center">
+  <sub>The demo runs on free hosting, so the first visit after a quiet period can take up to a minute while the server wakes up.</sub>
+</div>
 
 <br/>
 
@@ -86,7 +87,9 @@ It is a complete, deployed **MERN** application: a React single-page app talking
 - Share a post with a title, category, description and photo
 - **Like** and **comment** on posts
 - Leave a **star-rated review** of the platform
-- Delete your own posts (ownership enforced on the server)
+- **Edit** your own posts, including the photo
+- **Delete** your own posts, and delete comments (your own, or any comment on your posts)
+- Everything above is checked on the server, not just hidden in the UI
 
 </td>
 <td width="50%" valign="top">
@@ -107,6 +110,7 @@ It is a complete, deployed **MERN** application: a React single-page app talking
 - Personal profile page with **avatar upload** and bio
 - "My posts" grid with photo, category, likes and comments
 - Settings page to update your bio
+- **Public member pages** at `/u/<username>`: bio, join date, totals and posts. Every author name on the site links to one
 
 </td>
 <td width="50%" valign="top">
@@ -256,9 +260,9 @@ shaghaf/
 │   ├── vercel.json              SPA rewrite so deep links survive a refresh
 │   └── src/
 │       ├── api/                 Axios instance (attaches the JWT automatically)
-│       ├── components/          Navbar, Hero, PostsSection, PopularSection, ...
+│       ├── components/          Navbar, Hero, PostsSection, PopularSection, AuthorLink, ...
 │       ├── context/             AuthContext (login state shared across the app)
-│       ├── pages/               Home, Login, Signup, CreatePost, PostDetail, Profile, ...
+│       ├── pages/               Home, Login, Signup, CreatePost, PostDetail, Profile, UserProfile, ...
 │       ├── utils/               imageUrl helper
 │       └── images/
 ├── server/                      Express API
@@ -377,9 +381,11 @@ Base URL: `/api`. Routes marked 🔒 need the header `Authorization: Bearer <tok
 | `GET` | `/posts/popular` | Posts ranked by number of likes (`?limit=6`) |
 | `GET` | `/posts/:id` | One post with its author and comments |
 | `POST` | `/posts` 🔒 | Create a post (`multipart/form-data`: `title`, `category`, `description`, `image`) |
+| `PUT` | `/posts/:id` 🔒 | Edit a post (author only, `multipart/form-data`, photo optional) |
 | `DELETE` | `/posts/:id` 🔒 | Delete a post (author only) |
 | `PUT` | `/posts/:id/like` 🔒 | Like or unlike a post |
 | `POST` | `/posts/:id/comments` 🔒 | Add a comment |
+| `DELETE` | `/posts/:id/comments/:commentId` 🔒 | Delete a comment (comment author or post owner) |
 
 </details>
 
@@ -394,6 +400,7 @@ Base URL: `/api`. Routes marked 🔒 need the header `Authorization: Bearer <tok
 | `POST` | `/reviews` 🔒 | Create a review (rating 1 to 5 and text) |
 | `PUT` | `/users/me` 🔒 | Update bio and avatar (`multipart/form-data`) |
 | `GET` | `/users/me/posts` 🔒 | Posts written by the logged-in user |
+| `GET` | `/users/:username` | Public profile: bio, avatar, totals and posts (never the email) |
 | `GET` | `/stats` | Platform totals: users, posts, categories, likes |
 | `GET` | `/health` | Health check |
 
@@ -429,7 +436,8 @@ The project runs in production on four free services. Every `git push` to `main`
 
 - Passwords are hashed with **bcrypt** and never returned by the API
 - Protected routes verify a signed **JWT** on every request
-- Only a post's author can delete it, **enforced on the server** and not only hidden in the UI
+- Only a post's author can edit or delete it, and only a comment's author or the post owner can delete a comment, all **enforced on the server** and not only hidden in the UI
+- Public profiles expose only the username, bio, avatar and join date, **never the email**, and posts are returned with counts instead of lists of who liked or commented
 - Uploads accept **images only** (JPG, PNG, WebP) and are capped at 5 MB, and files are kept in memory instead of being written to disk
 - **Helmet** sets secure HTTP headers
 - **Rate limiting** on the auth routes slows down brute-force attempts
@@ -446,9 +454,17 @@ The project runs in production on four free services. Every `git push` to `main`
 - [x] Script that creates the default categories
 - [x] Production deployment (Vercel, Render, MongoDB Atlas)
 - [x] Security headers and rate limiting
+- [x] Edit posts (text and photo)
+- [x] Delete comments
+- [x] Public member profiles
 
 **Next**
-- [ ] Edit existing posts (text and photo)
+- [ ] Easier-to-spot profile links (avatars next to names in comments and cards)
+- [ ] Members page and people search
+- [ ] "More from this author" on post pages
+- [ ] Follow system, following feed and notifications
+- [ ] Photo cropping and resizing before upload
+- [ ] Email verification and password reset
 - [ ] Pagination for post lists
 - [ ] Request validation with a schema library
 - [ ] Automated tests and a CI workflow
