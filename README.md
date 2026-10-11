@@ -405,7 +405,7 @@ Base URL: `/api`. Routes marked 🔒 need the header `Authorization: Bearer <tok
 | `GET` | `/users/:username` | Public profile: bio, avatar, totals and posts (never the email) |
 | `GET` | `/stats` | Platform totals: users, posts, categories, likes |
 | `GET` | `/health` | Health check |
-
+| `GET` | `/users` | Members directory (`?search=` and `?limit=`), public fields only |
 </details>
 
 **Limits and validation:** images must be JPG, PNG or WebP and at most 5 MB. Titles are limited to 120 characters, descriptions to 2000, comments and reviews to 500 and bios to 300. Passwords need at least 6 characters. Login and signup are rate limited per IP address.
