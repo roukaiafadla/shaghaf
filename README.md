@@ -101,7 +101,7 @@ It is a complete, deployed **MERN** application: a React single-page app talking
 - **Search** across posts from the navbar
 - **More from this author** at the bottom of every post page
 - Live platform statistics on the About page
-
+- Members directory with search by name or bio, and member results in the navbar search
 </td>
 </tr>
 <tr>
