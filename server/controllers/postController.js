@@ -44,10 +44,14 @@ const getPopularPosts = asyncHandler(async (req, res) => {
 
 // @route GET /api/posts?category=slug&search=term
 const getPosts = asyncHandler(async (req, res) => {
+  // Pagination is opt-in: send ?page= and/or ?limit= to get { posts, page, pages, total }.
+  // Without them the old behaviour (a plain array of every match) is kept.
+  const paginated = req.query.page !== undefined || req.query.limit !== undefined;
+
   const filter = {};
   if (req.query.category) {
     const category = await Category.findOne({ slug: req.query.category });
-    if (!category) return res.json([]);
+    if (!category) return res.json(paginated ? { posts: [], page: 1, pages: 0, total: 0 } : []);
     filter.category = category._id;
   }
   if (req.query.search) {
@@ -60,12 +64,23 @@ const getPosts = asyncHandler(async (req, res) => {
     ];
   }
 
-  const posts = await Post.find(filter)
+  const query = Post.find(filter)
     .populate('author', 'username avatar')
     .populate('category', 'name slug')
-    .sort('-createdAt');
+    .sort({ createdAt: -1, _id: -1 }); // _id breaks ties so two pages never overlap
 
-  res.json(posts);
+  if (!paginated) return res.json(await query);
+
+  const requested = parseInt(req.query.limit, 10);
+  const limit = Math.min(requested >= 1 ? requested : 12, 50); // default 12, never more than 50
+  const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
+  const total = await Post.countDocuments(filter);
+  const pages = Math.ceil(total / limit);
+
+  // A page past the end is simply empty
+  const posts = page > pages ? [] : await query.skip((page - 1) * limit).limit(limit);
+
+  res.json({ posts, page, pages, total });
 });
 
 const getPostById = asyncHandler(async (req, res) => {

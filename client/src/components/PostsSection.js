@@ -67,8 +67,9 @@ const PostsSection = () => {
       setCategories(cats);
       const entries = await Promise.all(
         cats.map(async (cat) => {
-          const { data } = await api.get(`/posts?category=${cat.slug}`);
-          return [cat.slug, data.slice(0, 6)];
+          // Ask the server for just the 6 newest instead of downloading every post
+          const { data } = await api.get('/posts', { params: { category: cat.slug, page: 1, limit: 6 } });
+          return [cat.slug, data.posts];
         })
       );
       setPostsByCategory(Object.fromEntries(entries));

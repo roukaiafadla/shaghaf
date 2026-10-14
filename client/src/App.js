@@ -12,6 +12,7 @@ import CategoryPage from './pages/CategoryPage';
 import PostDetail from './pages/PostDetail';
 import Profile from './pages/Profile';
 import UserProfile from './pages/UserProfile';
+import Members from './pages/Members';
 import CreatePost from './pages/CreatePost';
 import Settings from './pages/Settings';
 import AboutUs from './pages/AboutUs';
@@ -32,6 +33,7 @@ function App() {
               <Route path="/category/:slug" element={<CategoryPage />} />
               <Route path="/posts/:id" element={<PostDetail />} />
               <Route path="/u/:username" element={<UserProfile />} />
+              <Route path="/members" element={<Members />} />
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/faqs" element={<FAQs />} />
               <Route path="/contactus" element={<ContactUs />} />

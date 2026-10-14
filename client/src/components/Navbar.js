@@ -46,6 +46,7 @@ const Navbar = () => {
                 ))}
               </div>
             </li>
+            <li><Link to="/members" className="hover:text-gold-300 transition-colors">Members</Link></li>
             <li><Link to="/about-us" className="hover:text-gold-300 transition-colors">About Us</Link></li>
             <li><Link to="/faqs" className="hover:text-gold-300 transition-colors">FAQs</Link></li>
             <li><Link to="/contactus" className="hover:text-gold-300 transition-colors">Contact Us</Link></li>
@@ -124,6 +125,7 @@ const Navbar = () => {
               ))}
             </div>
           </div>
+          <Link to="/members" className="block py-2 text-white/90 hover:text-gold-300" onClick={() => setMenuOpen(false)}>Members</Link>
           <Link to="/about-us" className="block py-2 text-white/90 hover:text-gold-300" onClick={() => setMenuOpen(false)}>About Us</Link>
           <Link to="/faqs" className="block py-2 text-white/90 hover:text-gold-300" onClick={() => setMenuOpen(false)}>FAQs</Link>
           <Link to="/contactus" className="block py-2 text-white/90 hover:text-gold-300" onClick={() => setMenuOpen(false)}>Contact Us</Link>

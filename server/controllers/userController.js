@@ -3,6 +3,9 @@ const User = require('../models/User');
 const Post = require('../models/Post');
 const { uploadBuffer, deleteByUrl } = require('../utils/cloudinary');
 
+// Escapes regex special characters so search text is always matched literally
+const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 // @route PUT /api/users/me (protected)
 const updateProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
@@ -29,6 +32,41 @@ const getMyPosts = asyncHandler(async (req, res) => {
     .populate('category', 'name slug')
     .sort('-createdAt');
   res.json(posts);
+});
+
+// @route GET /api/users?search=term&limit=24 (public)
+// Members directory: most active first. Only public fields are returned, never email or password.
+const listMembers = asyncHandler(async (req, res) => {
+  const limit = Math.min(parseInt(req.query.limit, 10) || 24, 48);
+  const search = typeof req.query.search === 'string' ? req.query.search.trim().slice(0, 50) : '';
+
+  const match = {};
+  if (search) {
+    const pattern = escapeRegex(search);
+    match.$or = [
+      { username: { $regex: pattern, $options: 'i' } },
+      { bio: { $regex: pattern, $options: 'i' } },
+    ];
+  }
+
+  const members = await User.aggregate([
+    { $match: match },
+    {
+      $lookup: {
+        from: 'posts',
+        let: { uid: '$_id' },
+        pipeline: [{ $match: { $expr: { $eq: ['$author', '$$uid'] } } }, { $count: 'n' }],
+        as: 'postStats',
+      },
+    },
+    { $addFields: { postCount: { $ifNull: [{ $arrayElemAt: ['$postStats.n', 0] }, 0] } } },
+    { $sort: { postCount: -1, createdAt: -1 } },
+    { $limit: limit },
+    // Inclusion-only projection: everything not listed here (email, password...) is dropped
+    { $project: { username: 1, bio: 1, avatar: 1, createdAt: 1, postCount: 1 } },
+  ]);
+
+  res.json(members);
 });
 
 // @route GET /api/users/:username (public)
@@ -81,4 +119,4 @@ const getPublicProfile = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { updateProfile, getMyPosts, getPublicProfile };
+module.exports = { updateProfile, getMyPosts, getPublicProfile, listMembers };

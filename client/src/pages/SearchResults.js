@@ -4,6 +4,10 @@ import { FaHeart, FaComment, FaSearch, FaTimes } from 'react-icons/fa';
 import api from '../api/client';
 import { imgUrl } from '../utils/imageUrl';
 import AuthorLink from '../components/AuthorLink';
+import MemberCard from '../components/MemberCard';
+import LoadMore from '../components/LoadMore';
+import usePagedPosts from '../hooks/usePagedPosts';
+import { useAuth } from '../context/AuthContext';
 
 
 const ResultCard = ({ post }) => (
@@ -46,22 +50,31 @@ const ResultCard = ({ post }) => (
 const SearchResults = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get('search') || '';
-  const [posts, setPosts] = useState([]);
   const [matchingCategories, setMatchingCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [members, setMembers] = useState([]);
+  const { user } = useAuth();
 
+  // Matching posts load 12 at a time, with a "Load more" button
+  const { posts, total, loading, loadingMore, error, hasMore, loadMore } = usePagedPosts({ search: query });
+
+  // Categories and members that match are small lists, loaded alongside
   useEffect(() => {
     if (!query) return;
-    setLoading(true);
+    let cancelled = false;
     Promise.all([
-      api.get(`/posts?search=${encodeURIComponent(query)}`),
       api.get('/categories'),
-    ]).then(([postsRes, catsRes]) => {
-      setPosts(postsRes.data);
-      setMatchingCategories(
-        catsRes.data.filter((c) => c.name.toLowerCase().includes(query.toLowerCase()))
-      );
-    }).finally(() => setLoading(false));
+      // A failing member search must never break the post results
+      api.get('/users', { params: { search: query, limit: 6 } }).catch(() => ({ data: [] })),
+    ])
+      .then(([catsRes, membersRes]) => {
+        if (cancelled) return;
+        setMatchingCategories(catsRes.data.filter((c) => c.name.toLowerCase().includes(query.toLowerCase())));
+        setMembers(membersRes.data);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
   }, [query]);
 
   return (
@@ -90,11 +103,40 @@ const SearchResults = () => {
         </div>
       )}
 
+      {members.length > 0 && (
+        <section className="mb-10">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold">Members</h2>
+            <Link
+              to={`/members?search=${encodeURIComponent(query)}`}
+              className="text-sm font-medium text-brand-600 hover:underline"
+            >
+              See all members →
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {members.map((m) => (
+              <MemberCard key={m._id} member={m} isYou={user?.username === m.username} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {members.length > 0 && !loading && posts.length > 0 && (
+        <h2 className="text-lg font-semibold mb-4">
+          Posts <span className="text-sm font-normal text-gray-400">({total})</span>
+        </h2>
+      )}
+
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="h-64 rounded-xl bg-gray-100 animate-pulse" />
           ))}
+        </div>
+      ) : error && posts.length === 0 ? (
+        <div className="text-center py-16 text-gray-400">
+          <p>Could not load posts. Please try again in a moment.</p>
         </div>
       ) : posts.length === 0 ? (
         <div className="text-center py-16 text-gray-400">
@@ -102,9 +144,14 @@ const SearchResults = () => {
           <p className="text-sm">Try a different word, or browse a category from the menu above.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts.map((post) => <ResultCard key={post._id} post={post} />)}
-        </div>
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {posts.map((post) => <ResultCard key={post._id} post={post} />)}
+          </div>
+          {(hasMore || error) && (
+            <LoadMore shown={posts.length} total={total} loading={loadingMore} error={error} onClick={loadMore} />
+          )}
+        </>
       )}
     </div>
   );
