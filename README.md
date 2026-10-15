@@ -102,6 +102,8 @@ It is a complete, deployed **MERN** application: a React single-page app talking
 - **More from this author** at the bottom of every post page
 - Live platform statistics on the About page
 - Members directory with search by name or bio, and member results in the navbar search
+- Post lists load 12 at a time with a **Load more** button
+
 </td>
 </tr>
 <tr>
@@ -261,9 +263,10 @@ shaghaf/
 │   ├── vercel.json              SPA rewrite so deep links survive a refresh
 │   └── src/
 │       ├── api/                 Axios instance (attaches the JWT automatically)
-│       ├── components/          Navbar, Hero, PostsSection, PopularSection, AuthorLink, Avatar, MoreFromAuthor, ...
+│       ├── components/          Navbar, Hero, PostsSection, PopularSection, AuthorLink, Avatar, MemberCard, MoreFromAuthor, LoadMore, ...
 │       ├── context/             AuthContext (login state shared across the app)
-│       ├── pages/               Home, Login, Signup, CreatePost, PostDetail, Profile, UserProfile, ...
+│       ├── hooks/               usePagedPosts (load-more pagination)
+│       ├── pages/               Home, Login, Signup, CreatePost, PostDetail, Profile, UserProfile, Members, ...
 │       ├── utils/               imageUrl helper
 │       └── images/
 ├── server/                      Express API
@@ -357,7 +360,6 @@ node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 > Never commit a real `.env` file. They are already listed in `.gitignore`.
 
 ---
-
 ## API reference
 
 Base URL: `/api`. Routes marked 🔒 need the header `Authorization: Bearer <token>`.
@@ -378,7 +380,7 @@ Base URL: `/api`. Routes marked 🔒 need the header `Authorization: Bearer <tok
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `GET` | `/posts` | List posts (`?category=slug` and `?search=term` supported) |
+| `GET` | `/posts` | List posts (`?category=slug`, `?search=term`; add `?page=` and `?limit=` for pagination, which returns `{ posts, page, pages, total }`) |
 | `GET` | `/posts/popular` | Posts ranked by number of likes (`?limit=6`) |
 | `GET` | `/posts/:id` | One post with its author and comments |
 | `GET` | `/posts/:id/more` | Other posts by the same author (`?limit=3`) |
@@ -402,13 +404,14 @@ Base URL: `/api`. Routes marked 🔒 need the header `Authorization: Bearer <tok
 | `POST` | `/reviews` 🔒 | Create a review (rating 1 to 5 and text) |
 | `PUT` | `/users/me` 🔒 | Update bio and avatar (`multipart/form-data`) |
 | `GET` | `/users/me/posts` 🔒 | Posts written by the logged-in user |
+| `GET` | `/users` | Members directory (`?search=` and `?limit=`), public fields only |
 | `GET` | `/users/:username` | Public profile: bio, avatar, totals and posts (never the email) |
 | `GET` | `/stats` | Platform totals: users, posts, categories, likes |
 | `GET` | `/health` | Health check |
-| `GET` | `/users` | Members directory (`?search=` and `?limit=`), public fields only |
+
 </details>
 
-**Limits and validation:** images must be JPG, PNG or WebP and at most 5 MB. Titles are limited to 120 characters, descriptions to 2000, comments and reviews to 500 and bios to 300. Passwords need at least 6 characters. Login and signup are rate limited per IP address.
+**Limits and validation:** images must be JPG, PNG or WebP and at most 5 MB. Titles are limited to 120 characters, descriptions to 2000, comments and reviews to 500 and bios to 300. Passwords need at least 6 characters. Login and signup are rate limited per IP address. Post lists return 12 per page by default (50 at most per request).
 
 ---
 
@@ -449,8 +452,6 @@ The project runs in production on four free services. Every `git push` to `main`
 
 ---
 
-## Roadmap
-
 **Shipped**
 - [x] Cloud image storage with Cloudinary
 - [x] Script that creates the default categories
@@ -460,13 +461,13 @@ The project runs in production on four free services. Every `git push` to `main`
 - [x] Delete comments
 - [x] Public member profiles
 - [x] Avatars next to names and "More from this author"
+- [x] Members directory and people search
+- [x] Paginated post lists
 
 **Next**
-- [ ] Members page and people search
 - [ ] Follow system, following feed and notifications
 - [ ] Photo cropping and resizing before upload
 - [ ] Email verification and password reset
-- [ ] Pagination for post lists
 - [ ] Request validation with a schema library
 - [ ] Automated tests and a CI workflow
 - [ ] Store the session in an httpOnly cookie instead of local storage
