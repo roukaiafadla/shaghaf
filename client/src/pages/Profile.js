@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { FaUserCircle, FaCamera, FaEye, FaTrash, FaPlus, FaHeart, FaComment, FaPen } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import api from '../api/client';
 import { imgUrl } from '../utils/imageUrl';
 
 
 const Profile = () => {
   const { user, updateUser } = useAuth();
+  const toast = useToast();
   const [posts, setPosts] = useState([]);
   const [uploading, setUploading] = useState(false);
 
@@ -20,8 +22,9 @@ const Profile = () => {
     try {
       await api.delete(`/posts/${postId}`);
       setPosts((prev) => prev.filter((p) => p._id !== postId));
+      toast.success('Post deleted');
     } catch (err) {
-      alert(err.response?.data?.message || 'Could not delete the post');
+      toast.error(err.response?.data?.message || 'Could not delete the post');
     }
   };
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaStar, FaQuoteLeft } from 'react-icons/fa';
 import api from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 const ReviewsSection = () => {
   const [reviews, setReviews] = useState([]);
@@ -10,6 +11,7 @@ const ReviewsSection = () => {
   const [rating, setRating] = useState(5);
   const [submitting, setSubmitting] = useState(false);
   const { user } = useAuth();
+  const toast = useToast();
 
   const loadReviews = () => {
     api.get('/reviews').then(({ data }) => setReviews(data)).finally(() => setLoading(false));
@@ -26,8 +28,9 @@ const ReviewsSection = () => {
       setText('');
       setRating(5);
       loadReviews();
+      toast.success('Thanks for sharing your review!');
     } catch (err) {
-      alert(err.response?.data?.message || 'Could not submit your review');
+      toast.error(err.response?.data?.message || 'Could not submit your review');
     } finally {
       setSubmitting(false);
     }

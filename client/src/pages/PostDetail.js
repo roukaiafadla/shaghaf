@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { FaHeart, FaComment, FaRegHeart, FaTrash, FaPen } from 'react-icons/fa';
 import api from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { imgUrl } from '../utils/imageUrl';
 import AuthorLink from '../components/AuthorLink';
 import Avatar from '../components/Avatar';
@@ -14,6 +15,7 @@ const PostDetail = () => {
   const [post, setPost] = useState(null);
   const [comment, setComment] = useState('');
   const { user } = useAuth();
+  const toast = useToast();
   const navigate = useNavigate();
 
   const load = useCallback(() => {
@@ -23,17 +25,28 @@ const PostDetail = () => {
   useEffect(load, [load]);
 
   const toggleLike = async () => {
-    if (!user) return alert('Log in to like this post');
-    await api.put(`/posts/${id}/like`);
-    load();
+    if (!user) {
+      toast.info('Log in to like this post');
+      return;
+    }
+    try {
+      await api.put(`/posts/${id}/like`);
+      load();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Could not update your like');
+    }
   };
 
   const submitComment = async (e) => {
     e.preventDefault();
     if (!comment.trim()) return;
-    await api.post(`/posts/${id}/comments`, { text: comment });
-    setComment('');
-    load();
+    try {
+      await api.post(`/posts/${id}/comments`, { text: comment });
+      setComment('');
+      load();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Could not post your comment');
+    }
   };
 
   const handleDelete = async () => {
@@ -41,8 +54,9 @@ const PostDetail = () => {
     try {
       await api.delete(`/posts/${id}`);
       navigate('/profile');
+      toast.success('Post deleted');
     } catch (err) {
-      alert(err.response?.data?.message || 'Could not delete the post');
+      toast.error(err.response?.data?.message || 'Could not delete the post');
     }
   };
 
@@ -51,8 +65,9 @@ const PostDetail = () => {
     try {
       await api.delete(`/posts/${id}/comments/${commentId}`);
       load();
+      toast.success('Comment deleted');
     } catch (err) {
-      alert(err.response?.data?.message || 'Could not delete the comment');
+      toast.error(err.response?.data?.message || 'Could not delete the comment');
     }
   };
 
