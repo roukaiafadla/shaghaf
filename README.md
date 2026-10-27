@@ -22,7 +22,7 @@ Share what you create, discover what others are making, and keep your passion al
 ![MongoDB](https://img.shields.io/badge/MongoDB_Atlas-0B2B1C?style=flat-square&logo=mongodb&logoColor=47A248)
 ![Cloudinary](https://img.shields.io/badge/Cloudinary-1A2B6D?style=flat-square&logo=cloudinary&logoColor=white)
 ![JWT](https://img.shields.io/badge/Auth-JWT-000000?style=flat-square&logo=jsonwebtokens&logoColor=white)
-
+![Google Gemini](https://img.shields.io/badge/Gemini_API-8E75B2?style=flat-square&logo=googlegemini&logoColor=white)
 <br/>
 
 [**Live demo**](https://shaghaf-sigma.vercel.app) &nbsp;·&nbsp;
@@ -251,6 +251,7 @@ erDiagram
 | **Database** | MongoDB (local, or MongoDB Atlas in production) |
 | **Authentication** | JSON Web Tokens, bcryptjs password hashing |
 | **Image storage** | Multer (in-memory) + Cloudinary |
+| **AI Integration** | Google GenAI SDK (`@google/genai`), Gemini API |
 | **Hardening** | Helmet, express-rate-limit, CORS allow-list |
 | **Hosting** | Vercel (client), Render (API), MongoDB Atlas (database), Cloudinary (images) |
 
@@ -345,6 +346,7 @@ Open <http://localhost:3000>, create an account and share your first post.
 | `CLOUDINARY_CLOUD_NAME` | Cloudinary dashboard value | `my-cloud` |
 | `CLOUDINARY_API_KEY` | Cloudinary dashboard value | `123456789012345` |
 | `CLOUDINARY_API_SECRET` | Cloudinary dashboard value | *(keep private)* |
+| `GEMINI_API_KEY` | Google Gemini API key for AI features | `AIzaSy...` |
 
 ### `client/.env`
 
@@ -467,6 +469,8 @@ The project runs in production on four free services. Every `git push` to `main`
 - [x] Paginated post lists
 - [x] Toast notifications for user feedback
 - [x] Custom 404 error page for unknown routes
+- [x] Google GenAI SDK (`@google/genai`) integration
+- [x] Gemini AI image-understanding experiments
 
 **Next**
 - [ ] Follow system, following feed and notifications
