@@ -122,7 +122,9 @@ It is a complete, deployed **MERN** application: a React single-page app talking
 - Responsive, mobile-first layout built with **Tailwind CSS**
 - Hamburger navigation on small screens
 - **Protected routes**: profile, settings and create-post redirect guests to login
-- Custom brand palette (coral, teal, gold) and Poppins typography
+- **Toast notifications** replacing native browser alerts for smooth feedback
+- Custom **404 error page** for unknown routes
+- Custom brand palette (coral, teal, gold) andPoppins typography
 
 </td>
 </tr>
@@ -463,6 +465,8 @@ The project runs in production on four free services. Every `git push` to `main`
 - [x] Avatars next to names and "More from this author"
 - [x] Members directory and people search
 - [x] Paginated post lists
+- [x] Toast notifications for user feedback
+- [x] Custom 404 error page for unknown routes
 
 **Next**
 - [ ] Follow system, following feed and notifications
