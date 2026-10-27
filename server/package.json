@@ -10,6 +10,7 @@
     "seed:categories": "node scripts/seedCategories.js"
   },
   "dependencies": {
+    "@google/genai": "^2.31.0",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.11.0",
     "cors": "^2.8.5",
